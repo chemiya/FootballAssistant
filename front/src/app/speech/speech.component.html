@@ -1,0 +1,429 @@
+<!--<div class="fondo">
+  <div class="container interior">
+    <div class="row">
+      <div class="col d-flex justify-content-center flex-column">
+        <h1 class="titulo">Bienvenido a FootballAssistant</h1>
+        <div class="contenedor-entrada d-flex flex-row ">
+          <div *ngIf="entrada_texto; else elseBlock" class="w-100">
+            <input class="entrada" [(ngModel)]="entrada" placeholder="Introduce tu consulta">
+          </div>
+          
+          <ng-template #elseBlock>
+            <div class="w-100">
+              <input class="entrada" [(ngModel)]="speech.text" placeholder="Introduce tu consulta">
+            </div>
+            
+          </ng-template>
+          <button class="boton" (click)="enviar()">Enviar</button>
+          <button [disabled]="!speech.error" class="boton" (click)="startService()">Grabar</button>
+        </div>
+        
+      </div>
+    </div>
+    
+    <div class="row mt-4">
+      <div class="col" *ngIf="mostrarRespuesta">
+        <p class="respuesta">{{respuesta}}</p>
+      </div>
+      <div class="col" *ngIf="mostrarTabla">
+        <table class="table tabla-resultados">
+          <thead>
+            <tr>
+              <th scope="col" class="text-center">Local</th>
+              <th scope="col" class="text-center">Resultado local</th>
+              <th scope="col" class="text-center">Resultado visitante</th>
+              <th scope="col" class="text-center">Visitante</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let elemento of resultados">
+              <td class="text-center">{{ elemento.local }}</td>
+              <td class="text-center">{{ elemento.resultado_local }}</td>
+              <td class="text-center">{{ elemento.resultado_visitante }}</td>
+              <td class="text-center">{{ elemento.visitante }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col" *ngIf="mostrarClasificacion">
+        <table class="table tabla-resultados">
+          <thead>
+            <tr>
+              <th scope="col" class="text-center">Posicion</th>
+              <th scope="col" class="text-center">Equipo</th>
+              <th scope="col" class="text-center">Puntos</th>
+              <th scope="col" class="text-center">Diferencia de goles</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let elemento of clasificacion">
+              <td class="text-center">{{ elemento.posicion }}</td>
+              <td class="text-center">{{ elemento.equipo }}</td>
+              <td class="text-center">{{ elemento.puntos }}</td>
+              <td class="text-center">{{ elemento.diferencia_goles }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>-->
+
+<!--<div class="container text-center mt-5">
+  <div class="card text-white bg-dark mb-3">
+    <div class="card-header text-uppercase">Speech Recognition</div>
+    <div class="card-body">
+      <button [disabled]="!speech.error" class="btn btn-danger m-2" (click)="startService()">Start</button>
+      <div class="card bg-light mt-2">
+        <p class="text-uppercase text-danger mt-3">{{speech.text}}</p>
+      </div>
+    </div>
+  </div>
+</div>-->
+
+
+<div class="body">
+  <div class="container">
+    <div class="row">
+      <div class="col">
+
+
+        <!--titulo-->
+        <div class="titulo">
+          <h1>Bienvenido a FootballAssistant</h1>
+        </div>
+
+
+
+        <!--inputs-->
+        <div class="contenedor-entrada d-flex flex-row ">
+          <div *ngIf="entrada_texto; else elseBlock" class="w-100">
+            <input class="entrada" [(ngModel)]="entrada" placeholder="Introduce tu consulta">
+          </div>
+
+          <ng-template #elseBlock>
+            <div class="w-100">
+              <input class="entrada" [(ngModel)]="speech.texto" placeholder="Introduce tu consulta">
+            </div>
+
+          </ng-template>
+          <button class="botonEnvio" (click)="enviar()"><i class="fa-solid fa-arrow-up icono"></i></button>
+          <button class="botonEnvio" (click)="startService()" *ngIf="!entrada_audio"><i
+              class="fa-solid fa-microphone icono"></i></button>
+          <button class="botonEnvioCancelar" (click)="stopService()" *ngIf="entrada_audio"><i
+              class="fa-solid fa-microphone icono"></i></button>
+        </div>
+
+
+
+
+
+      </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+    <div class="row">
+      <!--respuesta corta-->
+      <div class="col d-flex flex-column">
+
+
+
+        <!--recorro elementos del historial-->
+        <div *ngIf="mostrarRespuestasHistorial">
+
+
+
+
+
+          <!--primer elemento-->
+          <div>
+            <!--muestro la pregunta-->
+            <p class="pregunta">{{historial[0].pregunta}}</p>
+
+
+
+
+            <!--si es respuesta en una frase-->
+            <ol *ngIf="historial[0].tipo=='respuesta'" class="lista-falsa">
+              <div class="d-flex flex-column">
+                <div class="d-flex  align-items">
+                  <i class="fa-solid fa-futbol icono-respuesta me-2"></i>
+                  <p>FootballAsistant</p>
+                </div>
+                <li class="respuesta_simple typewriter-text">{{historial[0].respuesta}}</li>
+              </div>
+            </ol>
+
+
+
+
+            <!--si es error en una frase-->
+            <ol *ngIf="historial[0].tipo=='error'" class="lista-falsa">
+              <div class="d-flex flex-column">
+                <div class="d-flex  align-items">
+                  <i class="fa-solid fa-futbol icono-respuesta me-2"></i>
+                  <p>FootballAsistant</p>
+                </div>
+                <li class="respuesta_simple typewriter-text">{{historial[0].respuesta}}</li>
+              </div>
+            </ol>
+
+
+
+
+
+
+
+            <!--si es una tabla de clasificacion-->
+            <div *ngIf="historial[0].tipo=='clasificacion'">
+              <ol class="lista-falsa">
+                <div class="d-flex flex-column">
+                  <div class="d-flex  align-items">
+                    <i class="fa-solid fa-futbol icono-respuesta me-2"></i>
+                    <p>FootballAsistant</p>
+                  </div>
+                  <li class="respuesta_simple typewriter-text">A continuación, se muestra la clasificación de la
+                    competición en esa
+                    temporada</li>
+                </div>
+              </ol>
+
+
+              <table class="table tabla-resultados">
+                <thead>
+                  <tr>
+                    <th scope="col" class="text-center">Posicion</th>
+                    <th scope="col" class="text-center">Equipo</th>
+                    <th scope="col" class="text-center">Puntos</th>
+                    <th scope="col" class="text-center">Diferencia de goles</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let equipo of historial[0].respuesta">
+                    <td class="text-center">{{ equipo.posicion }}</td>
+                    <td class="text-center">{{ equipo.equipo }}</td>
+                    <td class="text-center">{{ equipo.puntos }}</td>
+                    <td class="text-center">{{ equipo.diferencia_goles }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+
+
+
+
+
+            <!--si es una tabla de resultados-->
+            <div *ngIf="historial[0].tipo=='resultados'">
+              <ol class="lista-falsa">
+                <div class="d-flex flex-column">
+                  <div class="d-flex  align-items">
+                    <i class="fa-solid fa-futbol icono-respuesta me-2"></i>
+                    <p>FootballAsistant</p>
+                  </div>
+                <li class="respuesta_simple typewriter-text">A continuación, se muestran los resultados del equipo en la
+                  temporada</li>
+                </div>
+              </ol>
+
+
+              <table class="table tabla-resultados">
+                <thead>
+                  <tr>
+                    <th scope="col" class="text-center">Local</th>
+                    <th scope="col" class="text-center">Resultado local</th>
+                    <th scope="col" class="text-center">Resultado visitante</th>
+                    <th scope="col" class="text-center">Visitante</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let equipo of historial[0].respuesta">
+                    <td class="text-center">{{ equipo.local }}</td>
+                    <td class="text-center">{{ equipo.resultado_local }}</td>
+                    <td class="text-center">{{ equipo.resultado_visitante }}</td>
+                    <td class="text-center">{{ equipo.visitante }}</td>
+                  </tr>
+                </tbody>
+              </table>
+
+            </div>
+          </div>
+
+
+
+
+
+
+
+
+          <!--resto de elementos-->
+          <div *ngFor="let elemento of historial.slice(1)">
+            <!--muestro la pregunta-->
+            <p class="pregunta">{{elemento.pregunta}}</p>
+
+
+
+
+            <!--si es respuesta en una frase-->
+            <ol *ngIf="elemento.tipo=='respuesta'" class="lista-falsa">
+              <div class="d-flex flex-column">
+                <div class="d-flex  align-items">
+                  <i class="fa-solid fa-futbol icono-respuesta me-2"></i>
+                  <p>FootballAsistant</p>
+                </div>
+              <li class="respuesta_simple ">{{elemento.respuesta}}</li>
+              </div>
+            </ol>
+
+
+
+            <!--si es error en una frase-->
+            <ol *ngIf="elemento.tipo=='error'" class="lista-falsa">
+              <div class="d-flex flex-column">
+                <div class="d-flex  align-items">
+                  <i class="fa-solid fa-futbol icono-respuesta me-2"></i>
+                  <p>FootballAsistant</p>
+                </div>
+              <li class="respuesta_simple ">{{elemento.respuesta}}</li>
+              </div>
+            </ol>
+
+
+
+
+
+
+
+            <!--si es una tabla de clasificacion-->
+            <div *ngIf="elemento.tipo=='clasificacion'">
+              <ol class="lista-falsa">
+                <div class="d-flex flex-column">
+                  <div class="d-flex  align-items">
+                    <i class="fa-solid fa-futbol icono-respuesta me-2"></i>
+                    <p>FootballAsistant</p>
+                  </div>
+                <li class="respuesta_simple ">A continuacion, se muestra la clasificacion de la competicion en esa
+                  temporada</li>
+                  </div>
+              </ol>
+
+
+              <table class="table tabla-resultados">
+                <thead>
+                  <tr>
+                    <th scope="col" class="text-center">Posicion</th>
+                    <th scope="col" class="text-center">Equipo</th>
+                    <th scope="col" class="text-center">Puntos</th>
+                    <th scope="col" class="text-center">Diferencia de goles</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let equipo of elemento.respuesta">
+                    <td class="text-center">{{ equipo.posicion }}</td>
+                    <td class="text-center">{{ equipo.equipo }}</td>
+                    <td class="text-center">{{ equipo.puntos }}</td>
+                    <td class="text-center">{{ equipo.diferencia_goles }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+
+
+
+
+
+            <!--si es una tabla de resultados-->
+            <div *ngIf="elemento.tipo=='resultados'">
+              <ol class="lista-falsa">
+                <div class="d-flex flex-column">
+                  <div class="d-flex  align-items">
+                    <i class="fa-solid fa-futbol icono-respuesta me-2"></i>
+                    <p>FootballAsistant</p>
+                  </div>
+                <li class="respuesta_simple ">A continuación, se muestran los resultados del equipo en la temporada</li>
+              </div>
+              </ol>
+
+
+              <table class="table tabla-resultados">
+                <thead>
+                  <tr>
+                    <th scope="col" class="text-center">Local</th>
+                    <th scope="col" class="text-center">Resultado local</th>
+                    <th scope="col" class="text-center">Resultado visitante</th>
+                    <th scope="col" class="text-center">Visitante</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let equipo of elemento.respuesta">
+                    <td class="text-center">{{ equipo.local }}</td>
+                    <td class="text-center">{{ equipo.resultado_local }}</td>
+                    <td class="text-center">{{ equipo.resultado_visitante }}</td>
+                    <td class="text-center">{{ equipo.visitante }}</td>
+                  </tr>
+                </tbody>
+              </table>
+
+            </div>
+          </div>
+        </div>
+
+
+
+
+        <!--cargador animacion-->
+
+        <div class="cargador" *ngIf="mostrarCargador">
+          <div class="box">
+            <div class="shadow"></div>
+            <div class="gravity">
+              <div class="ball"></div>
+            </div>
+
+          </div>
+          <p class="text-center mt-3">Cargando...</p>
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+      </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </div>
+  </div>
