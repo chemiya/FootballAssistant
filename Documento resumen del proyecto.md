@@ -96,9 +96,9 @@ La aplicación contará únicamente con una vista en la que aparecerá una entra
 
 
 <h2><li>Resultado final: vídeo youtube y repositorio</li></h2>
-Repositorio Github:
+Repositorio Github: https://github.com/chemiya/FootballAssistant
 
-Video Youtube:
+Video Youtube: https://youtu.be/rdWlh40c7-Q
 
 
 <h2><li>Conclusiones</li></h2>
